@@ -83,7 +83,7 @@ def writeData(filePath, data):
     f.close()
     
 def query(payload):
-        headers = {"Authorization": f"Bearer {'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'}"}
+        headers = {"Authorization": f"Bearer {'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'}"}
         API_URL = "https://api-inference.huggingface.co/models/bigscience/bloom"
         data = json.dumps(payload)
         response = requests.request("POST", API_URL, headers=headers, data=data)
