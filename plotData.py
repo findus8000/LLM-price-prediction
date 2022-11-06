@@ -1,4 +1,3 @@
-from locale import normalize
 import pandas as pd
 import json
 import matplotlib.pyplot as plt
@@ -47,8 +46,6 @@ def norm(value, max, min):
     
 
 def summarizeData(rawCompData, generatedData):
-    normalizedData = [[], []]
-    
     opeN = [[],[]]
     high = [[],[]]
     low = [[],[]]
@@ -73,25 +70,30 @@ def summarizeData(rawCompData, generatedData):
     closeMax = max(close[0] + (close[1]))
     closeMin = min(close[0] + (close[1]))
     
-    normPriceData1 = []
-    normPriceData2 = []
+    normRawData = []
+    normGenData = []
     for i in range(0, len(rawCompData)):
-        normPriceData1.append({"x": i, 
+        normRawData.append({"x": i, 
                                "OHLC": 
                                 [norm(rawCompData[i]["OHLC"][0], openMax, openMin),
                                  norm(rawCompData[i]["OHLC"][1], highMax, highMin),
                                  norm(rawCompData[i]["OHLC"][2], lowMax, lowMin),
                                  norm(rawCompData[i]["OHLC"][3], closeMax, closeMin)]})
-        normPriceData2.append({"x": i,
+        normGenData.append({"x": i,
                                 "OHLC": 
                                 [norm(generatedData[i]["OHLC"][0], openMax, openMin),
                                  norm(generatedData[i]["OHLC"][1], highMax, highMin),
                                  norm(generatedData[i]["OHLC"][2], lowMax, lowMin),
                                  norm(generatedData[i]["OHLC"][3], closeMax, closeMin)]})
         
-    normalizedData[0] = normPriceData1
-    normalizedData[1] = normPriceData2
-    
+    normSum = 0
+    for i in range(0, len(normRawData)):
+        normSum += abs(normRawData[i]["OHLC"][0] - normGenData[i]["OHLC"][0])
+        normSum += abs(normRawData[i]["OHLC"][1] - normGenData[i]["OHLC"][1])
+        normSum += abs(normRawData[i]["OHLC"][2] - normGenData[i]["OHLC"][2])
+        normSum += abs(normRawData[i]["OHLC"][3] - normGenData[i]["OHLC"][3])
+        
+    score = (1 - (normSum / (len(normRawData) * 4)))/1 * 100
     
     entryIndex = ""
     exitIndex = ""
@@ -110,14 +112,13 @@ def summarizeData(rawCompData, generatedData):
                     else:
                         entryIndex = "no profitable trade found"
                         exitIndex = "no profitable trade found"
-                        tradeResult = "no profitable trade found"
                         tradeResultPrc = "no profitable trade found"
                             
     
     print("Entry index: " + str(entryIndex))
     print("Exit index: " + str(exitIndex))
-    print("PNL($): " + str(tradeResult) + "$")
-    print("PNL(%): " + str(tradeResultPrc) + "%")
+    print("PNL: " + str(tradeResultPrc) + "%")
+    print("Datasets match: " + str(round(score, 1)) + "%")
 
 def plotCandleChart(dataFrame, title):
     plt.figure()
@@ -141,5 +142,3 @@ def plotCandleChart(dataFrame, title):
     
     plt.title(title)
     plt.xticks(rotation=30, ha='right')
-    
-#main()
