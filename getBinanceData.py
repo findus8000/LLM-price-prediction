@@ -1,16 +1,15 @@
-from binance import Client, ThreadedWebsocketManager, ThreadedDepthCacheManager
+from binance import Client
 import json
 
-def main():
-    cleanData = getPriceData("ETHUSDT", "1 day ago UTC")
+def main(ticker, timeframe, interval):
+    cleanData = getPriceData(ticker, timeframe, interval)
     writeFile("./data/rawData.json", cleanData)
-    writeFile("./data/halfRawData.json", cleanData[:int(len(cleanData)/2)])
     
-def getPriceData(ticker, interval):
+def getPriceData(ticker, timeframe, interval):
     client = Client('', '')
     cleanData = []
 
-    klines = client.get_historical_klines(ticker, Client.KLINE_INTERVAL_1HOUR, interval)
+    klines = client.get_historical_klines(ticker, timeframe, interval)
 
     for candle in klines:
         cleanData.append({"OHLC":
@@ -24,6 +23,4 @@ def writeFile(filePath, data):
     f = open(filePath, "w")
     f.write(json.dumps(data))
     f.close()
-    print("[data saved]")
-    
-#main()
+    print("[price data saved]")
