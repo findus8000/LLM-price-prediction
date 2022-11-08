@@ -115,10 +115,12 @@ def summarizeData(rawCompData, generatedData):
                         tradeResultPrc = "no profitable trade found"
                             
     
+    print("-------------------------------------------------\n")                        
     print("Entry index: " + str(entryIndex))
     print("Exit index: " + str(exitIndex))
     print("PNL: " + str(tradeResultPrc) + "%")
-    print("Datasets match: " + str(round(score, 1)) + "%")
+    print("Datasets match: " + str(round(score, 1)) + "%\n")
+    print("-------------------------------------------------\n")
 
 def plotCandleChart(dataFrame, title):
     plt.figure()
