@@ -7,7 +7,7 @@ def main(modelInputSize, nrCandelsToGen, temprature):
     generatedCandels = generateText(data, [], 0, temprature, 0, nrCandelsToGen)
     writeData("./data/generatedData.json", generatedCandels)
     writeData("./data/rawCompData.json", mirroredData)
-    print("[" + str(len(generatedCandels)) + " candles generated]")
+    print("[" + str(len(generatedCandels)) + " candles generated]\n")
     
 def addN(string):
     for i in range(1, len(string)):
